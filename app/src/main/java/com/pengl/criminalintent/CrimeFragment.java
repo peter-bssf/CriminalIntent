@@ -1,6 +1,7 @@
 package com.pengl.criminalintent;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,17 +19,26 @@ import java.util.UUID;
  * Created by pengl on 2015/11/18.
  */
 public class CrimeFragment extends android.support.v4.app.Fragment {
+    private static final String ARG_CRIME_ID = "crime_id";
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
     private TextView mTitleNumTextView;
 
+    public static Fragment newInstance(UUID crimeid) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CRIME_ID, crimeid);
+
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UUID crimeId = (UUID) getActivity().getIntent()
-                .getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
+        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
 
