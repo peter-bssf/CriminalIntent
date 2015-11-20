@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.UUID;
 
 /**
  * Created by pengl on 2015/11/18.
@@ -19,11 +22,14 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
+    private TextView mTitleNumTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCrime = new Crime();
+        UUID crimeId = (UUID) getActivity().getIntent()
+                .getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
+        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
 
     // API to Create fragment view's layout
@@ -55,12 +61,16 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
         mDateButton.setEnabled(false);
 
         mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
+        mSolvedCheckBox.setChecked(mCrime.isResolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setResolved(isChecked);
             }
         });
+
+        mTitleNumTextView = (TextView)v.findViewById(R.id.crime_title_num);
+        mTitleNumTextView.setText(mCrime.getTitle());
         return v;
     }
 }
